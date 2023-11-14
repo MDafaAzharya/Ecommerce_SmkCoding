@@ -1,18 +1,20 @@
 <script lang="ts" setup>
-import { category } from "~/composables/constants/category";
+import { useCategoryStore } from '~/stores/category';
+const categoryStore = useCategoryStore();
+const { categories } = storeToRefs(categoryStore);
+categoryStore.getAllCategory();
 const isShow = ref(false);
-defineEmits(["selectedCategory"]);
 </script>
 
 <template>
   <div class="relative select-none">
     <div
-      class="border border-yellow-600 flex items-center justify-center px-3 py-2 rounded-lg gap-4 cursor-pointer w-full hover:bg-gray-100"
+      class="border border-sky-500 flex items-center justify-center px-3 py-2 rounded-lg gap-4 cursor-pointer w-full hover:bg-gray-100"
       @click="isShow = !isShow"
     >
-      <span class="text-yellow-600 font-medium">Category</span>
+      <span class="text-sky-500 font-medium">Category</span>
       <i
-        :class="`ri-arrow-down-s-line text-yellow-600 text-xl text-bold transition
+        :class="`ri-arrow-down-s-line text-sky-500 text-xl text-bold transition
 duration-300 ${isShow ? 'rotate-180' : 'rotate-0'}`"
       ></i>
     </div>
@@ -24,14 +26,14 @@ duration-300 ${isShow ? 'rotate-180' : 'rotate-0'}`"
       <ul class="py-2 text-sm text-gray-700">
         <li>
           <span
-            class="block px-4 py-2 hover:bg-yellow-600 hover:text-white transition duration-200 cursor-pointer"
+            class="block px-4 py-2 hover:bg-sky-600 hover:text-white transition duration-200 cursor-pointer"
             @click="$emit('selectedCategory', '')"
             >All</span
           >
         </li>
-        <li v-for="(item, index) in category" :key="index">
+        <li v-for="(item, index) in categories" :key="index">
           <span
-            class="block px-4 py-2 hover:bg-yellow-600 hover:text-white transition duration-200 cursor-pointer"
+            class="block px-4 py-2 hover:bg-sky-600 hover:text-white transition duration-200 cursor-pointer"
             @click="$emit('selectedCategory', item.name)"
             >{{ item?.name }}</span
           >

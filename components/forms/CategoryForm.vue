@@ -1,33 +1,51 @@
 <script lang="ts" setup>
-import { category } from "~/composables/constants/category";
-const categories = ref(category);
+import { useCategoryStore } from '~/stores/category';
+const categoryStore = useCategoryStore();
+const { categories } = storeToRefs(categoryStore);
+const isSuccess = ref(false);
+const message = ref ("");
 const form = ref({
   name: "",
 });
 const isShowAlert = ref(false);
-const submitCategory = () => {
-  categories.value.push({
-    id: categories.value.length + 1,
+const createCategory = async () => {
+  const newCategoryData = {
     name: form.value.name,
-  });
-  isShowAlert.value = true;
-  form.value.name = "";
-  setTimeout(() => {
-    isShowAlert.value = false;
-  }, 3000);
+    // Add other properties if needed
+  };
+
+  try {
+    await categoryStore.createCategory(newCategoryData);
+
+    if (categoryStore.status) {
+      isSuccess.value = true;
+      message.value = "Category created successfully";
+      isShowAlert.value = true;
+      form.value.name = "";
+
+      setTimeout(() => {
+        isShowAlert.value = false;
+      }, 3000);
+    } else {
+      isSuccess.value = false;
+      message.value = "Create Category Failed !!!";
+      isShowAlert.value = true;
+    }
+  } catch (error) {
+    isSuccess.value = false;
+    message.value = `Error creating category`;
+    isShowAlert.value = true;
+  }
 };
 </script>
 <template>
   <section class="flex justify-center py-10">
     <div class="w-[500px]">
       <h1 class="text-2xl mb-7 font-medium">Create Category</h1>
-      <div
-        v-if="isShowAlert"
-        class="p-4 mb-4 text-sm rounded-lg bg-green-100 text-green-800"
-      >
-        Create Category Successfully
+      <div v-if="isShowAlert" :class="`p-4 mb-4 text-sm rounded-lg ${isSuccess ? 'bg-green-100 text-green-800' : 'text-red-800 bg-red-100'}`" role="alert">
+        {{ message }}
       </div>
-      <form @submit.prevent="submitCategory">
+      <form @submit.prevent="createCategory">
         <div class="mb-6">
           <label
             for="name"

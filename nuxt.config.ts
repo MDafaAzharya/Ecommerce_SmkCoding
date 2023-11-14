@@ -8,11 +8,18 @@ export default defineNuxtConfig({
     }
   },
   devtools: { enabled: true },
-  modules: ['@vite-pwa/nuxt', '@nuxtjs/tailwindcss'],
+  modules: ['@vite-pwa/nuxt', '@nuxtjs/tailwindcss','@pinia/nuxt'],
   tailwindcss : {
     cssPath : '~/asset/css/tailwind.css',
     configPath : '~/tailwind.config.ts',
   },
+  appConfig: {
+    apikey: process.env.SUPABASE_API_KEYS,
+    baseUrl: process.env.SUPABASE_URL,
+    secretKey: process.env.SUPABASE_SECRETS_KEY,
+    storageUrl: process.env.SUPABASE_STORAGE_URL,
+    baseStorageUrl: process.env.SUPABASE_GET_STORAGE_URL,
+    },
   pwa: {
     manifest : {
       "name": "smkcode",
